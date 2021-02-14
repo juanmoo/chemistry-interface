@@ -42,8 +42,7 @@ export class Upload extends React.Component {
       this.setState({
         collectionList: collectionList,
       });
-
-      console.log(this.state.collectionList);
+      this.render();
     });
   };
 
@@ -75,6 +74,7 @@ export class Upload extends React.Component {
     const api_endpoint = base_url + "/upload";
 
     axios.post(api_endpoint, formData).then((res) => {
+      this.handleClose();
       if (res.status == 200) {
         // banner to say it was succesfully uploaded
         this.setState({ showUploadSuccess: true }, () => {
@@ -90,8 +90,9 @@ export class Upload extends React.Component {
           }, 2000);
         });
       }
-      this.handleClose();
     });
+
+    this.getCollectionList();
   };
 
   handleSubmit = () => {
@@ -151,7 +152,6 @@ export class Upload extends React.Component {
   }
 
   render() {
-      
     if (this.state.shouldReloadTable) {
       this.getCollectionList();
       this.setState({ shouldReloadTable: false });

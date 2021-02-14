@@ -1,29 +1,51 @@
-import React from "react"
-import axios from 'axios';
-import { Jumbotron, Button, Form, FormControl } from "react-bootstrap"
+import React from "react";
+import { Service } from "../service/api";
+import { Jumbotron, Form, Button } from "react-bootstrap";
 
 export class Extract extends React.Component {
+  service = null;
 
-    // File content to be displayed after
-    render() {
-        return (
-            <>
-                <Jumbotron>
-                    <h4>
-                        Select PDFs to be extracted:
-                    </h4>
+  constructor() {
+    super();
+    this.state = { collections: [] };
+    this.service = new Service();
 
-                    <Form>
-                        <Form.Group>
-                            <Form.Control id="selectedCollection" as="select">
-                                <option>Example Collection 1</option>
-                                <option>Example Collection 2</option>
-                            </Form.Control>
-                        </Form.Group>
-                    </Form>
+    this.service.getCollections((colls) => {
+      this.setState({ collections: colls });
+    });
+  }
 
-                </Jumbotron>
-            </>
-        )
-    }
+  renderCollectionSelect() {
+    return (
+      <Form.Control id="selectedCollection" as="select">
+        {this.state.collections.map((c) => {
+          console.log(c.name);
+          return <option key={c.getName()}>{c.getName()}</option>;
+        })}
+      </Form.Control>
+    );
+  }
+
+  // File content to be displayed after
+  render() {
+    return (
+      <Jumbotron>
+        <h4>Select PDFs to be extracted:</h4>
+
+        <Form>
+          <Form.Group>
+            <Form.Label>Select Collection</Form.Label>
+            {this.renderCollectionSelect()}
+            <br></br>
+            <Form.Label>Select Model</Form.Label>
+            <Form.Control id="selectedModel" as="select">
+              <option>Model A | 80% Pilot Documents</option>
+            </Form.Control>
+            <br></br>
+            <Button variant="primary">Extract</Button>
+          </Form.Group>
+        </Form>
+      </Jumbotron>
+    );
+  }
 }
