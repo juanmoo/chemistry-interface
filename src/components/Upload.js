@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Table, Modal, Alert } from "react-bootstrap";
+import { Service } from "../service/api";
 import axios from "axios";
 
 import { Jumbotron, Button, Form, FormControl } from "react-bootstrap";
@@ -18,6 +19,8 @@ export class Upload extends React.Component {
     collectionList: [],
   };
 
+  service = null;
+
   handleClose = () => {
     this.setState({ showModal: false });
   };
@@ -26,25 +29,14 @@ export class Upload extends React.Component {
     this.setState({ showModal: true });
   };
 
-  /////////////////// Load Available Collections ///////////////////
+  constructor() {
+    super();
 
-  getCollectionList = () => {
-    const list_url = base_url + "/list";
-    axios.get(list_url).then((res) => {
-      let collectionList = [];
-      res.data.collections.forEach((e) => {
-        collectionList.push({
-          collectionName: e.collection_name,
-          documentCount: e.collection_size,
-        });
-      });
-
-      this.setState({
-        collectionList: collectionList,
-      });
-      this.render();
+    this.service = new Service();
+    this.service.getCollections((colls) => {
+      this.setState({ collectionList: colls });
     });
-  };
+  }
 
   /////////////////////////// File Upload //////////////////////////////////
 
@@ -92,40 +84,15 @@ export class Upload extends React.Component {
       }
     });
 
-    this.getCollectionList();
+    this.service.getCollections((colls) => {
+      this.setState({ collectionList: colls });
+    });
   };
 
   handleSubmit = () => {
     return false;
   };
 
-  // File content to be displayed after
-  // file upload is complete
-  fileData = () => {
-    if (this.state.selectedFile) {
-      return (
-        <div>
-          <h2>File Details:</h2>
-
-          <p>File Name: {this.state.selectedFile.name}</p>
-
-          <p>File Type: {this.state.selectedFile.type}</p>
-
-          <p>
-            Last Modified:{" "}
-            {this.state.selectedFile.lastModifiedDate.toDateString()}
-          </p>
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <br />
-          <h4>Choose before Pressing the Upload button</h4>
-        </div>
-      );
-    }
-  };
   ////////////////////////////////////////////////////////////////////////////////////////
 
   renderTable() {
@@ -141,8 +108,8 @@ export class Upload extends React.Component {
           {this.state.collectionList.map((e) => {
             return (
               <tr>
-                <td>{e.collectionName}</td>
-                <td>{e.documentCount}</td>
+                <td>{e.name}</td>
+                <td>{e.size}</td>
               </tr>
             );
           })}
@@ -152,11 +119,6 @@ export class Upload extends React.Component {
   }
 
   render() {
-    if (this.state.shouldReloadTable) {
-      this.getCollectionList();
-      this.setState({ shouldReloadTable: false });
-    }
-
     return (
       <>
         <Alert variant="success" show={this.state.showUploadSuccess}>
