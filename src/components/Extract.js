@@ -7,11 +7,15 @@ export class Extract extends React.Component {
 
   constructor() {
     super();
-    this.state = { collections: [] };
+    this.state = { collections: [], models: [] };
     this.service = new Service();
 
     this.service.getCollections((colls) => {
-      this.setState({ collections: colls });
+      this.setState({ collections: colls })
+    });
+
+    this.service.getModels((modelList) => {
+      this.setState({ models: modelList })
     });
   }
 
@@ -19,11 +23,20 @@ export class Extract extends React.Component {
     return (
       <Form.Control id="selectedCollection" as="select">
         {this.state.collections.map((c) => {
-          console.log(c.name);
           return <option key={c.getName()}>{c.getName()}</option>;
         })}
       </Form.Control>
     );
+  }
+
+  renderModelList() {
+    return (
+      <Form.Control id="selectedModel" as="select">
+        {this.state.models.map(modelName => {
+          return <option key={modelName}>{modelName}</option>
+        })}
+      </Form.Control>
+    )
   }
 
   // File content to be displayed after
@@ -38,9 +51,7 @@ export class Extract extends React.Component {
             {this.renderCollectionSelect()}
             <br></br>
             <Form.Label>Select Model</Form.Label>
-            <Form.Control id="selectedModel" as="select">
-              <option>Model A | 80% Pilot Documents</option>
-            </Form.Control>
+            {this.renderModelList()}
             <br></br>
             <Button variant="primary">Extract</Button>
           </Form.Group>

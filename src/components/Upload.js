@@ -5,7 +5,7 @@ import axios from "axios";
 
 import { Jumbotron, Button, Form, FormControl } from "react-bootstrap";
 
-const base_url = "http://rosetta6.csail.mit.edu:5000";
+const base_url = "http://rosetta5.csail.mit.edu:5000";
 
 export class Upload extends React.Component {
   // General Form State

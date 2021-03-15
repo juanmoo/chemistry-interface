@@ -2,7 +2,7 @@ import axios from "axios";
 import Collection from "../model/collection";
 import React from "react";
 
-const base_url = "http://rosetta6.csail.mit.edu:5000";
+const base_url = "http://rosetta5.csail.mit.edu:5000";
 
 export class Service {
   collections = null;
@@ -39,6 +39,18 @@ export class Service {
     } else {
       callback(this.collections);
     }
+  }
+
+  getModels(callback) {
+    const list_models_url = `${base_url}/listModels`;
+
+    axios.get(list_models_url).then((res) => {
+      let modelList = [];
+      res.data.models.forEach(item => {
+        modelList.push(item)
+      })
+      callback(modelList)
+    })
   }
 }
 
