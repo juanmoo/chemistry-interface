@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { Table, Modal, Alert } from "react-bootstrap";
 import { Service } from "../service/api";
 import axios from "axios";
+import {base_url} from "../config"
 
 import { Jumbotron, Button, Form, FormControl } from "react-bootstrap";
-
-const base_url = "http://rosetta5.csail.mit.edu:5000";
 
 export class Upload extends React.Component {
   // General Form State
@@ -107,7 +106,7 @@ export class Upload extends React.Component {
         <tbody>
           {this.state.collectionList.map((e) => {
             return (
-              <tr>
+              <tr key={e.name}>
                 <td>{e.name}</td>
                 <td>{e.size}</td>
               </tr>

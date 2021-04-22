@@ -1,8 +1,8 @@
 import axios from "axios";
+import qs from 'qs';
 import Collection from "../model/collection";
-import React from "react";
-
-const base_url = "http://rosetta5.csail.mit.edu:5000";
+import Extraction from "../model/extraction";
+import { base_url } from "../config"
 
 export class Service {
   collections = null;
@@ -52,6 +52,49 @@ export class Service {
       callback(modelList)
     })
   }
+
+  createExtraction(collectionName, modelName, callback) {
+    const create_extraction_url = `${base_url}/createExtraction`
+
+    const form = {
+      modelName: modelName,
+      collectionName: collectionName
+    }
+
+    const data = qs.stringify(form)
+    console.log(data)
+
+    console.log(create_extraction_url)
+    axios.post(create_extraction_url, data)
+      .then(function (response) {
+        console.log(response);
+        callback()
+      }).catch(function (error) {
+        console.log(error)
+        callback()
+      })
+  }
+
+  getExtractionList(callback) {
+    const extraction_list_url = `${base_url}/listExtractions`;
+
+    axios.get(extraction_list_url).then((res) => {
+      let extractionList = [];
+      res.data.extractions.forEach((e) => {
+        extractionList.push(new Extraction(e.collection, e.model, e.modtime))
+      });
+
+      callback(extractionList);
+    });
+  }
+
+
+  download(collectionName, modelName) {
+    console.log('Starting downloaf ..')
+    const download_url = `${base_url}/getExtraction?collection=${collectionName}&model=${modelName}`;
+    window.location.href=download_url
+  }
+
 }
 
 export function getCollectionList(callback) {
