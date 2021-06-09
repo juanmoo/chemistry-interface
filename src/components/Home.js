@@ -5,14 +5,13 @@ import { Redirect } from "react-router-dom"
 export class Home extends React.Component {
 
     renderRedirect = () => {
-        return <Redirect to='/upload' />
+        return <Redirect to='/extract' />
     }
 
     render() {
 
         return (
             <>
-                <h1>Takeda Project </h1>
                 {this.renderRedirect()}
             </>
         );
