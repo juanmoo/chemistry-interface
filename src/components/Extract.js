@@ -7,19 +7,25 @@ export class Extract extends React.Component {
 
   constructor() {
     super();
-    this.state = { showStartSuccess: false, inputText: '', hasExtraction: false, tokens: [], reactions: [] };
+    this.state = { showStartSuccess: false, inputText: '', showExtraction: false, tokens: [], reactions: [] };
     this.service = new Service();
     this.createExtraction = this.createExtraction.bind(this)
   }
 
   createExtraction() {
     let text = this.state.inputText;
+
+    // Show start banner
+    this.setState({ showStartSuccess: true, showExtraction: false })
+    setTimeout(() => {
+      this.setState({ showStartSuccess: false })
+    }, 2000);
+
     this.service.extractParagraph(text, (res) => {
       console.log(res)
       const tokens = res.data.extractions[0].tokens
       const reactions = res.data.extractions[0].reactions
-
-
+      this.setState({ showExtraction: true, tokens: tokens, reactions: reactions })
       this.render()
     })
   }
@@ -83,7 +89,7 @@ export class Extract extends React.Component {
   }
 
   renterExtractions() {
-    if (this.state.hasExtraction) {
+    if (this.state.showExtraction) {
       return (<Card>
         <Card.Header as="h5">Extraction</Card.Header>
         <Form.Group>
