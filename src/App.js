@@ -16,7 +16,7 @@ function App() {
       <Router>
         <div>
           <Navbar bg="dark" variant="dark">
-            <Navbar.Brand href="/extract">Small Molecule Extractor Demo</Navbar.Brand>
+            <Navbar.Brand href="/extract">ChemRxnExtractor</Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link href="/extract">Extract Paragraph</Nav.Link>
               <Nav.Link href="/upload">Upload</Nav.Link>
