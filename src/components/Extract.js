@@ -16,7 +16,7 @@ export class Extract extends React.Component {
     let text = this.state.inputText;
 
     // Show start banner
-    this.setState({ showStartSuccess: true, showExtraction: false })
+    this.setState({ showStartSuccess: true, showExtraction: false, selectedReaction: 0 })
     setTimeout(() => {
       this.setState({ showStartSuccess: false })
     }, 2000);
