@@ -92,7 +92,7 @@ export class Extract extends React.Component {
     }
 
     return <Form.Group>
-      <Form.Control as="select" value={this.state.selectedReaction} onChange={(e) => {
+      <Form.Control as="select" onChange={(e) => {
         const selectedIndex = e.target.options.selectedIndex;
         const key = e.target.options[selectedIndex].getAttribute('data-key')
         this.setState({
