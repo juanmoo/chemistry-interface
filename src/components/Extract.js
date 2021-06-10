@@ -72,22 +72,32 @@ export class Extract extends React.Component {
       }
     }
 
+    let i = 0;
+    while (i < ent.length) {
 
+      let j = i + 1;
+      while (ent[i] === ent[j]) {
+        j++;
+      };
 
-    for (const [j, tok] of tokens.entries()) {
-      if (ent[j] !== "none") {
+      const entToks = tokens.slice(i, j);
+      const entText = entToks.join(' ')
 
-        const style = {
-          cursor: 'help',
-          backgroundColor: 'white',
-          borderColor: this.colorMap[ent[j]],
-          borderWidth: '2px',
-        }
-        toks.push(<button className="btn btn-sm" data-toggle="tooltip" data-placement="top" title={ent[j]} style={style} data-original-title={ent[j]} key={j}><span>{tok}</span></button>)
-      } else {
-        toks.push(` ${tok} `)
+      const style = {
+        cursor: 'help',
+        backgroundColor: 'white',
+        borderColor: this.colorMap[ent[i]],
+        borderWidth: '2px',
       }
+
+      if (ent[i] === "No Concept") {
+        toks.push(` ${entText} `)
+      } else {
+        toks.push(<button className="btn btn-sm" data-toggle="tooltip" data-placement="top" title={ent[i]} style={style} data-original-title={ent[i]} key={i}><span>{entText}</span></button>)
+      }
+      i = j
     }
+
     return <div>{toks}</div>
   }
 
