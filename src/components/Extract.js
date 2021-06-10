@@ -1,9 +1,21 @@
 import React from "react";
 import { Service } from "../service/api";
-import { Jumbotron, Form, Button, Alert, Card } from "react-bootstrap";
+import { Jumbotron, Form, Button, Alert, Card, Table, Accordion } from "react-bootstrap";
 
 export class Extract extends React.Component {
   service = null;
+
+  colorMap = {
+    "No Concept": "white",
+    "Product": "#ff5454",
+    "Reactants": "#f0ba84",
+    "Reaction": "#723d46",
+    "Solvent": "#eb5e28",
+    "Catalyst_Reagents": "#54ffc3",
+    "Yield": "#ffc300",
+    "Temperature": "#3cbab1",
+    "Time": "#d8d243",
+  }
 
   constructor() {
     super();
@@ -35,7 +47,7 @@ export class Extract extends React.Component {
     let ent = []
 
     for (let j = 0; j < tokens.length; j++) {
-      ent.push('none')
+      ent.push('No Concept')
     }
 
     for (let key of Object.keys(reaction)) {
@@ -60,14 +72,7 @@ export class Extract extends React.Component {
       }
     }
 
-    const colorMap = {
-      "none": "white",
-      "Temperature": "green",
-      "Solvent": "blue",
-      "Yield": "orange",
-      "Product": "red",
-      "Reactants": "yellow"
-    }
+
 
     for (const [j, tok] of tokens.entries()) {
       if (ent[j] !== "none") {
@@ -75,7 +80,7 @@ export class Extract extends React.Component {
         const style = {
           cursor: 'help',
           backgroundColor: 'white',
-          borderColor: colorMap[ent[j]],
+          borderColor: this.colorMap[ent[j]],
           borderWidth: '2px',
         }
         toks.push(<button className="btn btn-sm" data-toggle="tooltip" data-placement="top" title={ent[j]} style={style} data-original-title={ent[j]} key={j}><span>{tok}</span></button>)
@@ -120,6 +125,43 @@ export class Extract extends React.Component {
     }
   }
 
+  renderColorLegend() {
+    return <>
+      <Accordion>
+        <Card>
+          <Card.Header>
+            <Accordion.Toggle as={Button} variant="link" eventKey="0">
+              Color Key
+      </Accordion.Toggle>
+          </Card.Header>
+          <Accordion.Collapse eventKey="0">
+            <Table striped bordered hover size="small">
+              <thead>
+                <tr>
+                  <th>Entity Name</th>
+                  <th>Color</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(this.colorMap).map((entry) => {
+                  const key = entry[0];
+                  const col = entry[1];
+                  return <tr>
+                    <td>{key}</td>
+                    <td style={{
+                      backgroundColor: entry[1],
+                    }}></td>
+                  </tr>
+                })}
+              </tbody>
+            </Table>
+          </Accordion.Collapse>
+        </Card>
+      </Accordion>
+
+    </>
+  }
+
   // File content to be displayed after
 
   render() {
@@ -140,6 +182,7 @@ export class Extract extends React.Component {
             </Form.Group>
           </Form>
 
+          {this.renderColorLegend()}
           {this.renterExtractions()}
         </Jumbotron>
       </>
