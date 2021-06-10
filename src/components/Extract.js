@@ -65,7 +65,8 @@ export class Extract extends React.Component {
       "Temperature": "green",
       "Solvent": "blue",
       "Yield": "orange",
-      "Product": "red"
+      "Product": "red",
+      "Reactants": "yellow"
     }
 
     for (const [j, tok] of tokens.entries()) {
