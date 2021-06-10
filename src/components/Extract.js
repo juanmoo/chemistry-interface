@@ -7,7 +7,7 @@ export class Extract extends React.Component {
 
   constructor() {
     super();
-    this.state = { showStartSuccess: false, inputText: '', showExtraction: false, tokens: [], reactions: [] };
+    this.state = { showStartSuccess: false, inputText: '', showExtraction: false, tokens: [], reactions: [], selectedReaction: 0 };
     this.service = new Service();
     this.createExtraction = this.createExtraction.bind(this)
   }
@@ -22,7 +22,6 @@ export class Extract extends React.Component {
     }, 2000);
 
     this.service.extractParagraph(text, (res) => {
-      console.log(res)
       const tokens = res.data.extractions[0].tokens
       const reactions = res.data.extractions[0].reactions
       this.setState({ showExtraction: true, tokens: tokens, reactions: reactions })
@@ -39,7 +38,6 @@ export class Extract extends React.Component {
     }
 
     for (let key of Object.keys(reaction)) {
-      console.log(key)
       if (key === "Product") {
         const locs = reaction[key]
         const start = locs[0]
@@ -60,8 +58,6 @@ export class Extract extends React.Component {
         }
       }
     }
-
-    console.log(reaction)
 
     const colorMap = {
       "none": "white",
@@ -88,17 +84,33 @@ export class Extract extends React.Component {
     return <div>{toks}</div>
   }
 
+  renderReactionSelector() {
+
+    const reactionOptions = []
+    for (let j = 0; j < this.state.reactions.length; j++) {
+      reactionOptions.push(<option key={j} data-key={j}>{`Reaction ${j}`}</option>)
+    }
+
+    return <Form.Group>
+      <Form.Control as="select" value={this.state.selectedReaction} onChange={(e) => {
+        const selectedIndex = e.target.options.selectedIndex;
+        const key = e.target.options[selectedIndex].getAttribute('data-key')
+        this.setState({
+          selectedReaction: key
+        })
+      }}>
+        {reactionOptions}
+      </Form.Control>
+    </Form.Group>
+  }
+
   renterExtractions() {
     if (this.state.showExtraction) {
       return (<Card>
         <Card.Header as="h5">Extraction</Card.Header>
-        <Form.Group>
-          <Form.Control as="select">
-            <option>Reaction 1</option>
-          </Form.Control>
-        </Form.Group>
+        {this.renderReactionSelector()}
         <Card.Body>
-          {this.renderReaction(this.state.tokens, this.state.reactions[0])}
+          {this.renderReaction(this.state.tokens, this.state.reactions[this.state.selectedReaction])}
         </Card.Body>
       </Card>)
     } else {
