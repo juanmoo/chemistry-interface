@@ -7,7 +7,7 @@ export class Extract extends React.Component {
 
   constructor() {
     super();
-    const defaultParagraph = 'Reaction of diphenylacetylene with complex 19A led to only cycloheptadienone 23A in 30 $ yield; with (phenylcyclopropy1)- carbene complex 19B, cycloheptadienone 25 was produced in 53% yield.'
+    const defaultParagraph = 'We were excited to find that , with 2.0 equiv of copper acetate and DMSO as the solvent , 2-(3-(methylthio)naphthalen-2-yl)pyridine was obtained as a single product in 89 % yield at 125 °C ( Table 1 ) .'
     this.state = { showStartSuccess: false, inputText: defaultParagraph, showExtraction: false, tokens: [], reactions: [], selectedReaction: 0 };
     this.service = new Service();
     this.createExtraction = this.createExtraction.bind(this)
