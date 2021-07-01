@@ -1,6 +1,7 @@
 import React from "react";
 import { Service } from "../service/api";
 import { Jumbotron, Form, Button, Alert, Card, Table, Accordion } from "react-bootstrap";
+import './Extract.css';
 
 export class Extract extends React.Component {
   service = null;
@@ -19,8 +20,9 @@ export class Extract extends React.Component {
 
   constructor() {
     super();
-    const defaultParagraph = 'We were excited to find that , with 2.0 equiv of copper acetate and DMSO as the solvent , 2-(3-(methylthio)naphthalen-2-yl)pyridine was obtained as a single product in 89 % yield at 125 °C ( Table 1 ) .'
-    this.state = { showStartSuccess: false, inputText: defaultParagraph, showExtraction: false, tokens: [], reactions: [], selectedReaction: 0 };
+    this.demoParagraph = 'We were excited to find that , with 2.0 equiv of copper acetate and DMSO as the solvent , 2-(3-(methylthio)naphthalen-2-yl)pyridine was obtained as a single product in 89 % yield at 125 °C ( Table 1 ) .'
+    let defaultParagraph = "";
+    this.state = { showStartSuccess: false, isInputText: true, inputText: defaultParagraph, showExtraction: false, tokens: [], reactions: [], selectedReaction: 0 };
     this.service = new Service();
     this.createExtraction = this.createExtraction.bind(this)
   }
@@ -142,7 +144,7 @@ export class Extract extends React.Component {
           <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey="0">
               Color Key
-      </Accordion.Toggle>
+            </Accordion.Toggle>
           </Card.Header>
           <Accordion.Collapse eventKey="0">
             <Table striped bordered hover size="small">
@@ -182,18 +184,32 @@ export class Extract extends React.Component {
           Extraction succesfully started! This should take up to a minute.
         </Alert>
         <Jumbotron>
-          <h4>Automated Reaction Extractor</h4>
+          <h4>Online Demo</h4>
 
-          <Form>
-            <Form.Group>
-              <Form.Control as="textarea" rows={5} value={this.state.inputText} onChange={(e) => this.setState({ inputText: e.target.value })} placeholder="Type or paste the reaction paragraph here"></Form.Control>
-              <br />
-              <Button variant="primary" onClick={this.createExtraction}>Extract</Button>
-            </Form.Group>
-          </Form>
+          <div className="button-box">
+            <button className={`${this.state.isInputText ? 'selected' : ''}`} onClick={() => {
+              this.setState({ isInputText: true })
+            }}>Text Input</button>
+            &nbsp;&nbsp;
+            <button className={`${this.state.isInputText ? '' : 'selected'}`} onClick={() => {
+              this.setState({ isInputText: false })
+            }}>Upload File</button></div>
+          <br />
 
-          {this.renderColorLegend()}
-          {this.renterExtractions()}
+          <div className={"textInput" + (this.state.isInputText ? '' : ' d-none')}>
+            <Form>
+              <Form.Group>
+                <Form.Control as="textarea" placeholder="Hello" rows={5} value={this.state.inputText} onChange={(e) => this.setState({ inputText: e.target.value })} placeholder="Type or paste some text here."></Form.Control>
+
+                <p><span className="font-weight-bold">Example:</span> {this.demoParagraph}</p>
+                <br />
+                <Button variant="primary" onClick={this.createExtraction}>Extract</Button>
+              </Form.Group>
+            </Form>
+
+            {this.renderColorLegend()}
+            {this.renterExtractions()}
+          </div>
         </Jumbotron>
       </>
     );
