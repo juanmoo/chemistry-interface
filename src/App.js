@@ -17,7 +17,7 @@ function App() {
     <div className="App">
       <Router>
         <div>
-          <Navbar bg="dark" variant="dark">
+          <Navbar bg="dark" variant="dark" className="px-2">
             <Navbar.Brand href="/home">ChemRxnExtractor</Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link href="/home">Home</Nav.Link>
@@ -45,7 +45,7 @@ function App() {
       </Router>
 
       <footer class="footer">
-        <div class="container">
+        <div className="container">
           <span class="footer-head">ChemRxnExtractor v0.1 @ 2021</span> &nbsp; <a href="https://accessibility.mit.edu/">Accessibility</a> <br />
 
           <p class="footer-info">

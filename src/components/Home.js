@@ -23,7 +23,7 @@ export class Home extends React.Component {
                     CRE extracts major products of reactions and a set of associated reaction roles, including Reaction type, Reactants, Solvent, Temperature, etc.
                 </p>
 
-                <Button href="/extract"> > Try our online demo</Button> &nbsp; &nbsp; &nbsp; <Button href="https://pubs.acs.org/doi/10.1021/acs.jcim.1c00284"> > Read our paper</Button>
+                <Button href="/extract" className="my-1"> > Try our online demo</Button> &nbsp; &nbsp; &nbsp; <Button href="https://pubs.acs.org/doi/10.1021/acs.jcim.1c00284"> > Read our paper</Button>
 
             </div>
         );

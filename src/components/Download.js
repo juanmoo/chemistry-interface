@@ -2,7 +2,7 @@ import React from "react";
 
 export class Download extends React.Component {
 	render() {
-		return <div className="container mt-5 mx-5">
+		return <div className="mt-5 mx-5">
 			<h4> Downloads </h4>
 
 			<p>
