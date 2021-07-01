@@ -7,6 +7,7 @@ import {
 import { Navbar, Nav } from "react-bootstrap";
 import { Extract } from "./components/Extract";
 import { Home } from "./components/Home"
+import { Download } from "./components/Download"
 // import { Upload } from "./components/Upload"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -17,11 +18,11 @@ function App() {
       <Router>
         <div>
           <Navbar bg="dark" variant="dark">
-            <Navbar.Brand href="/extract">ChemRxnExtractor</Navbar.Brand>
+            <Navbar.Brand href="/home">ChemRxnExtractor</Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link href="/home">Home</Nav.Link>
-              <Nav.Link href="/extract">Extract Paragraph</Nav.Link>
-              <Nav.Link href="/upload">Upload</Nav.Link>
+              <Nav.Link href="/extract">Online Demo</Nav.Link>
+              <Nav.Link href="/download">Download</Nav.Link>
             </Nav>
           </Navbar>
 
@@ -31,10 +32,9 @@ function App() {
               <Extract />
             </Route>
 
-            {/* Comment back in when document upload is implemented
-            <Route path="/upload">
-              <Upload />
-            </Route> */}
+            <Route path="/download">
+              <Download />
+            </Route>
 
             <Route path="/">
               <Home />
