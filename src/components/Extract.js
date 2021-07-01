@@ -210,6 +210,19 @@ export class Extract extends React.Component {
             {this.renderColorLegend()}
             {this.renterExtractions()}
           </div>
+
+          <div className={"fileInput" + (this.state.isInputText ? ' d-none' : '')}>
+            <p>Currently works with PDF version of journal articles published by ACS</p>
+            <Form.Group>
+              <Form.File
+                id="uploadedFiles"
+                onChange={() => { }}
+              />
+            </Form.Group>
+
+            <Button>Submit</Button>
+          </div>
+
         </Jumbotron>
       </>
     );
