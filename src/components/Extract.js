@@ -2,6 +2,19 @@ import React from "react";
 import { Service } from "../service/api";
 import { Jumbotron, Form, Button, Alert, Card, Table, Accordion } from "react-bootstrap";
 import './Extract.css';
+import { base_url } from "../config"
+import axios from "axios";
+
+
+function downloadObjectAsJson(exportObj, exportName) {
+  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+  var downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute("href", dataStr);
+  downloadAnchorNode.setAttribute("download", exportName + ".json");
+  document.body.appendChild(downloadAnchorNode); // required for firefox
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+}
 
 export class Extract extends React.Component {
   service = null;
@@ -22,9 +35,58 @@ export class Extract extends React.Component {
     super();
     this.demoParagraph = 'We were excited to find that , with 2.0 equiv of copper acetate and DMSO as the solvent , 2-(3-(methylthio)naphthalen-2-yl)pyridine was obtained as a single product in 89 % yield at 125 °C ( Table 1 ) .'
     let defaultParagraph = "";
-    this.state = { showStartSuccess: false, isInputText: true, inputText: defaultParagraph, showExtraction: false, tokens: [], reactions: [], selectedReaction: 0 };
+    this.state = { showStartSuccess: false, isInputText: true, inputText: defaultParagraph, showExtraction: false, tokens: [], reactions: [], selectedReaction: 0, selectedFiles: null, documentInProgress: false, jsonOutput: null };
     this.service = new Service();
     this.createExtraction = this.createExtraction.bind(this)
+    this.downloadExtractionAsJson = this.downloadExtractionAsJson.bind(this)
+  }
+
+  //TODO: separate upload logic into service
+  onFileChange = (event) => {
+    // Update the state
+    this.setState({ selectedFiles: event.target.files });
+  };
+
+  // On file upload (click the upload button)
+  onFileUpload = () => {
+    // Create an object of formData
+    const formData = new FormData();
+
+    // Update the formData object
+
+    for (var i = 0; i < this.state.selectedFiles.length; i++) {
+      let file = this.state.selectedFiles[i];
+      let fileName = "file_" + String(i);
+      formData.append(fileName, file, file.name);
+    }
+
+    // Send formData object
+    const api_endpoint = base_url + "/extractDocument";
+
+    console.log(api_endpoint)
+
+    // banner to say it was succesfully uploaded
+    this.setState({ showStartSuccess: true, documentInProgress: true }, () => {
+      window.setTimeout(() => {
+        this.setState({ showStartSuccess: false });
+      }, 2000);
+    });
+
+    axios.post(api_endpoint, formData).then((res) => {
+      console.log(res)
+      this.setState({ jsonOutput: res.data.extractions, documentInProgress: false })
+    });
+  };
+
+  handleSubmit = () => {
+    return false;
+  };
+
+  downloadExtractionAsJson() {
+    downloadObjectAsJson(this.state.jsonOutput, 'extraction')
+    window.setTimeout(() => {
+      this.setState({ jsonOutput: null })
+    }, 20000)
   }
 
   createExtraction() {
@@ -178,10 +240,15 @@ export class Extract extends React.Component {
 
   render() {
 
+    let cname = 'pt-5' + ((this.state.documentInProgress || this.state.jsonOutput !== null) ? '' : ' d-none')
+    console.log('inpgrogress', this.state.documentInProgress)
+    console.log('jsonOutput', this.state.jsonOutput)
+    console.log('className: ', cname)
+
     return (
       <>
         <Alert variant="success" show={this.state.showStartSuccess}>
-          Extraction succesfully started! This should take up to a minute.
+          Extraction succesfully started! This might take a few minutes.
         </Alert>
         <Jumbotron>
           <h4>Online Demo</h4>
@@ -213,17 +280,24 @@ export class Extract extends React.Component {
 
           <div className={"fileInput" + (this.state.isInputText ? ' d-none' : '')}>
             <p>Currently works with PDF version of journal articles published by ACS</p>
-            <Form.Group>
-              <Form.File
-                id="uploadedFiles"
-                onChange={() => { }}
-              />
-            </Form.Group>
+            <Form onSubmit={this.handleSubmit}>
+              <Form.Group>
+                <Form.File
+                  id="uploadedFiles"
+                  onChange={this.onFileChange}
+                />
+              </Form.Group>
+            </Form>
 
-            <Button>Submit</Button>
+            <Button onClick={this.onFileUpload} >Submit</Button>
+
+            <div className={cname}>
+              <span>An extraction is currently getting generated. If it is not currently visible, the download button should appear shortly.</span> <br />
+              <Button type="secondary" className={this.state.jsonOutput !== null ? '' : 'd-none'} onClick={this.downloadExtractionAsJson}> Download Extraction </Button>
+            </div>
           </div>
 
-        </Jumbotron>
+        </Jumbotron >
       </>
     );
   }
